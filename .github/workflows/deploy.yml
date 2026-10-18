@@ -33,10 +33,15 @@ jobs:
         run: flutter pub get
 
       - name: Compilar MOVVA para web
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
           flutter build web --release \
-            --base-href "/${REPO_NAME}/"
+            --base-href "/${REPO_NAME}/" \
+            --dart-define=SUPABASE_URL="$SUPABASE_URL" \
+            --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
