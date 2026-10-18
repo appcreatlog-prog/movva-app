@@ -334,9 +334,11 @@ class HomePage extends StatelessWidget {
           .where((a) => !a.date.isBefore(inicioSemana))
           .fold<double>(0, (s, a) => s + a.km);
 
-      Duration? ritmo;
-      if (ultima != null && ultima.km > 0.02) {
-        ritmo = Duration(seconds: (ultima.seconds / ultima.km).round());
+            Duration? ritmo;
+      if (ultima != null && ultima.km >= 0.1 && ultima.seconds > 0) {
+        final seg = (ultima.seconds / ultima.km).round();
+        // Acima de 30 min/km indica pouco movimento ou GPS impreciso.
+        if (seg <= 30 * 60) ritmo = Duration(seconds: seg);
       }
 
       final meta = BackendConfig.client?.auth.currentUser?.userMetadata?['display_name'];
