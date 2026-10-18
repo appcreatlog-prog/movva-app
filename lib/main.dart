@@ -6,7 +6,7 @@ import 'backend_config.dart';
 import 'registrar_page.dart';
 import 'auth_pages.dart';
 import 'public_profiles_page.dart';
-
+import 'movva_home_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try { await BackendConfig.initialize(); } catch (e) {
@@ -49,9 +49,9 @@ class _ShellState extends State<Shell> {
   final repo = ActivityRepository();
   int refreshKey = 0;
 
-  Future<void> _registrar() async {
+  Future<void> _registrar([String modo = 'Corrida']) async {
     final resumo = await Navigator.of(context).push<Resumo>(
-      MaterialPageRoute(builder: (_) => const RegistrarPage(modo: 'Corrida')),
+      MaterialPageRoute(builder: (_) => RegistrarPage(modo: modo)),
     );
     if (resumo == null || !mounted) return;
     final record = ActivityRecord(
