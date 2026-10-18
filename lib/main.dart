@@ -114,9 +114,9 @@ String fmtTime(int s) {
 String fmtKm(double km) => km.toStringAsFixed(2).replaceAll('.', ',');
 String fmtPace(ActivityRecord r) => r.km > 0.02 ? fmtTime((r.seconds/r.km).round()) : '--:--';
 
-class HomePage extends StatelessWidget {
+class HomePageAntiga extends StatelessWidget {
   final ActivityRepository repo; final VoidCallback onStart; final int refreshKey;
-  const HomePage({super.key, required this.repo, required this.onStart, required this.refreshKey});
+  const HomePageAntiga({super.key, required this.repo, required this.onStart, required this.refreshKey});
   @override Widget build(BuildContext context) => FutureBuilder<List<ActivityRecord>>(
     key: ValueKey(refreshKey), future: repo.getAll(),
     builder: (context, snap) {
@@ -304,4 +304,62 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height:16),const Text('Suas atividades sincronizam com a nuvem quando há internet e sessão ativa. Se estiver offline, ficam guardadas neste aparelho para tentar sincronizar depois.',style:TextStyle(color:Cores.mudo,fontSize:12)),
       ]));
     });
+}
+class HomePage extends StatelessWidget {
+  final ActivityRepository repo;
+  final void Function(String modo) onStart;
+  final int refreshKey;
+  final ValueChanged<int>? onNavigate;
+  const HomePage({
+    super.key,
+    required this.repo,
+    required this.onStart,
+    required this.refreshKey,
+    this.onNavigate,
+  });
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<List<ActivityRecord>>(
+    key: ValueKey(refreshKey),
+    future: repo.getAll(),
+    builder: (context, snap) {
+      final list = [...(snap.data ?? <ActivityRecord>[])]
+        ..sort((a, b) => b.date.compareTo(a.date));
+      final ultima = list.isEmpty ? null : list.first;
+
+      final agora = DateTime.now();
+      final inicioSemana =
+          DateTime(agora.year, agora.month, agora.day - (agora.weekday - 1));
+      final kmSemana = list
+          .where((a) => !a.date.isBefore(inicioSemana))
+          .fold<double>(0, (s, a) => s + a.km);
+
+      Duration? ritmo;
+      if (ultima != null && ultima.km > 0.02) {
+        ritmo = Duration(seconds: (ultima.seconds / ultima.km).round());
+      }
+
+      final meta = BackendConfig.client?.auth.currentUser?.userMetadata?['display_name'];
+      final nome = (meta is String && meta.isNotEmpty) ? meta : null;
+
+      return Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 520),
+          child: MovvaHomeContent(
+            userName: nome,
+            distanceKm: ultima?.km,
+            duration: ultima == null ? null : Duration(seconds: ultima.seconds),
+            pacePerKm: ritmo,
+            calories: ultima?.calories.round(),
+            weeklyKm: kmSemana,
+            weeklyGoalKm: 20,
+            onStartRun: () => onStart('Corrida'),
+            onStartRide: () => onStart('Pedal'),
+            onOpenChallenges: onNavigate == null ? null : () => onNavigate!(3),
+            onProfile: onNavigate == null ? null : () => onNavigate!(4),
+          ),
+        ),
+      );
+    },
+  );
 }
