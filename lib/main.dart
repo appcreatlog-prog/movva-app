@@ -70,7 +70,7 @@ class _ShellState extends State<Shell> {
 
   @override Widget build(BuildContext context) {
     final pages = [
-      HomePage(repo: repo, onStart: _registrar, refreshKey: refreshKey),
+      HomePage(repo: repo, onStart: _registrar, refreshKey: refreshKey, onNavigate: (i) => setState(() => aba = i)),
       ExplorePage(repo: repo, refreshKey: refreshKey),
       const SizedBox.shrink(),
       ChallengesPage(repo: repo, refreshKey: refreshKey),
