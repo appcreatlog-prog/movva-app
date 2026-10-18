@@ -21,17 +21,48 @@ class AuthGate extends StatelessWidget {
 
 class SupabaseSetupPage extends StatelessWidget {
   const SupabaseSetupPage({super.key});
-  @override Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Cores.fundo,
-    body: SafeArea(child: Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(Icons.bolt, color: Cores.laranja, size: 56),
-      const Text('MOVVA', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, letterSpacing: 5)),
-      const SizedBox(height: 16),
-      const Text('Conecte seu projeto Supabase para ativar login, banco remoto e perfis públicos.', textAlign: TextAlign.center, style: TextStyle(color: Cores.mudo)),
-      const SizedBox(height: 18),
-      const Text('No Windows, execute o app com --dart-define=SUPABASE_URL=... e --dart-define=SUPABASE_ANON_KEY=...\nDepois execute o arquivo supabase/movva_schema.sql no SQL Editor do Supabase.', textAlign: TextAlign.center),
-    ]))),
-  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Cores.fundo,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.bolt, color: Cores.laranja, size: 56),
+                const Text(
+                  'MOVVA',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Conecte seu projeto Supabase para ativar login, banco remoto e perfis públicos.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Cores.mudo),
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'No Windows, execute o app com --dart-define=SUPABASE_URL=... '
+                  'e --dart-define=SUPABASE_ANON_KEY=...\n'
+                  'Depois execute o arquivo supabase/movva_schema.sql '
+                  'no SQL Editor do Supabase.',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class LoginPage extends StatefulWidget {

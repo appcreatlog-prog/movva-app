@@ -14,7 +14,7 @@ class BackendConfig {
       debugPrint('MOVVA: configure SUPABASE_URL e SUPABASE_ANON_KEY.');
       return;
     }
-    await Supabase.initialize(url: url, anonKey: anonKey);
+    await Supabase.initialize(url: url, publishableKey: anonKey);
     _ready = true;
   }
 
